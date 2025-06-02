@@ -30,6 +30,6 @@ jobs:
 
     - name: Build Docker image
       run: docker build -t my-shapes-app .
-S
+
     - name: Echo deploy ✔️
       run: echo "Docker image built → would be deployed here"
