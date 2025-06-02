@@ -1,3 +1,5 @@
+name: CI/CD — Shapes Demo
+
 on:
   push:
     branches: [main]
@@ -7,10 +9,11 @@ on:
 jobs:
   build-test:
     runs-on: ubuntu-latest
+
     steps:
     - uses: actions/checkout@v4
 
-    - uses: actions/setup-python@v4
+    - uses: actions/setup-python@v5
       with:
         python-version: "3.10"
 
@@ -19,12 +22,16 @@ jobs:
         python -m pip install --upgrade pip
         pip install -r requirements.txt
 
+    - name: Expose repo root to PYTHONPATH 
+      run: echo "PYTHONPATH=${GITHUB_WORKSPACE}" >> $GITHUB_ENV
+
     - name: Run pytest
       run: pytest -q
 
   docker-deploy:
-    needs: build-test          
+    needs: build-test
     runs-on: ubuntu-latest
+
     steps:
     - uses: actions/checkout@v4
 
@@ -32,4 +39,4 @@ jobs:
       run: docker build -t my-shapes-app .
 
     - name: Echo deploy ✔️
-      run: echo "Docker image built → would be deployed here"
+      run: echo "✅ Docker image built — would be deployed here"
